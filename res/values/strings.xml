@@ -3,6 +3,7 @@
 
     <string name="app_name">ActivityMonitor</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="record">Record Data</string>
+    <string name="stop">Stop Recording Data</string>
 
 </resources>
