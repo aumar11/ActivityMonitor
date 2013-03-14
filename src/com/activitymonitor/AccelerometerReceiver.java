@@ -2,6 +2,8 @@ package com.activitymonitor;
 
 
 
+import java.util.Date;
+
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -38,10 +40,10 @@ public class AccelerometerReceiver implements SensorEventListener {
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
-		// InteractionsDB db = new InteractionsDB(mContext);
-		// db.addInteraction(new LocationInteraction(timestamp, provider, location.getLatitude(),
-		// location.getLongitude(), location.getAccuracy()));
-		// How to add to the database!!!!
+		 SampleDB db = new SampleDB(mContext);
+		 Date date = new Date();
+		 db.addSample(new Sample(event.values[0],event.values[1],event.values[2],
+				 date.getTime(),labelName));
 		// Log.i(TAG,"x , y and z");
 	}
 
