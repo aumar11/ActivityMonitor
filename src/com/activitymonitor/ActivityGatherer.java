@@ -1,11 +1,14 @@
 package com.activitymonitor;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -42,12 +45,16 @@ public class ActivityGatherer extends Activity {
 		// Cast View v to Button
 		Button thisButton = (Button) view;
 		EditText edtLabelName = (EditText) ActivityGatherer.this.findViewById(R.id.edtLabelName);
-		if(edtLabelName.getText()== null){
+		//Set the label name for the next session of recording data
+		labelName = edtLabelName.getText().toString();
+		
+		//Still need to improve this if statement but it will do for now!
+		if(labelName.equals("")|| labelName.contains(" ")){
 			//Inform the user to input a label name
+			createLabelNameDialog();
 		}
 		else{
-			//Set the label name for the next session of recording data
-			labelName = edtLabelName.getText().toString();
+
 			//Stop service gathering accelerometer data
 			if(mIsRecording){
 				mIsRecording = false;
@@ -70,6 +77,28 @@ public class ActivityGatherer extends Activity {
 		}
 
 	}
+	
+	/**
+	 * Creates a dialog telling the user that the airplane is turned on.
+	 */
+	private void createLabelNameDialog() {
+
+		String msg = "You need to input a label name.";
+		AlertDialog.Builder builder = new AlertDialog.Builder(ActivityGatherer.this);
+		builder.setMessage(msg)
+		.setCancelable(false)
+		.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
+
+
+	}
+
+
 	/**
 	 * Starts the gathering service.
 	 */
