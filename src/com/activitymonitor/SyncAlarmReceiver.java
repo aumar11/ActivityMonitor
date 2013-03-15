@@ -46,7 +46,7 @@ public class SyncAlarmReceiver extends BroadcastReceiver {
   @Override
   public void onReceive(Context context, Intent intent) {
    Log.i(TAG, "Synchronisation with server requested");
-   // Intent syncIntent = new Intent(context, SyncService.class);
-   // context.startService(syncIntent);
+    Intent syncIntent = new Intent(context, SyncService.class);
+    context.startService(syncIntent);
   }
 }

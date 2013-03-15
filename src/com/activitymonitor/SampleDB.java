@@ -15,6 +15,7 @@ import java.io.Writer;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
@@ -54,7 +55,7 @@ public class SampleDB {
 	 */
 	public SampleDB(Context context) {
 		//Logger.log(TAG, "Creating a handler for interactions db");
-		String dbPath = /*SampleDB.getDBPath() + "/" + */ DB_NAME;
+		String dbPath = SampleDB.getDBPath() + "/" +  DB_NAME;
 		dbHelper = new SampleDBHelper(context, dbPath);
 	}
 
@@ -92,7 +93,7 @@ public class SampleDB {
 	private static String getDBPath() {
 		String path = Environment.getExternalStorageDirectory().getPath() + "/" + BASE_DIR;
 		
-		Log.d(TAG, "Checking if " + path + " exists");
+//		Log.d(TAG, "Checking if " + path + " exists");
 		File dbDir = new File(path);
 		if (!dbDir.isDirectory()) {
 			try {
@@ -106,5 +107,20 @@ public class SampleDB {
 			}
 		}
 		return path;
+	}
+
+	public Cursor getLatestSamples(int latestId) {
+	    Log.i(TAG, "Fetching all interactions starting from id " + (latestId + 1));
+	    SQLiteDatabase db = null;
+	    try {
+	      db = dbHelper.getReadableDatabase();
+	      Cursor c = db.query(SampleDBHelper.TABLE, null, SampleDBHelper.ID + " > " + latestId,
+	                          null, null, null, SampleDBHelper.ID + " ASC");
+	      Log.i(TAG, "Fetched " + c.getCount() + " rows");
+	      return c;
+	    } finally {
+	      if (db != null)
+	        db.close();
+	    }
 	}
 }
