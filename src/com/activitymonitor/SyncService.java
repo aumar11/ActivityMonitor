@@ -84,7 +84,7 @@ public class SyncService extends Service {
 	/**
 	 * Server host name.
 	 */
-	private final static String HOST = "10.200.0.249";
+	private final static String HOST = "10.200.0.242";
 	/**
 	 * Relative path to the PHP script returning the latest data id on the server.
 	 */
@@ -179,6 +179,8 @@ public class SyncService extends Service {
 		//	httpClient.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE , true);            
 
 			HttpResponse httpResponse = httpClient.execute(httpPost);
+			HttpEntity entity = httpResponse.getEntity();
+			Log.i(TAG, EntityUtils.toString(entity, SyncService.CHARSET));
 			StatusLine status = httpResponse.getStatusLine();
 			int statusCode = status.getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {

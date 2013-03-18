@@ -56,7 +56,7 @@ public class Gzipper {
       byte[] ba = baos.toByteArray(); 
       return ba;
     } catch (Exception e) {
-      Log.i(TAG, e.getMessage());
+      Log.e(TAG,"zipping issue" +  e.getMessage());
       return null;
     }
   }
