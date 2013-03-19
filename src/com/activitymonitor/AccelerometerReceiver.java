@@ -17,6 +17,7 @@ public class AccelerometerReceiver implements SensorEventListener {
 	public static final String TAG = "AccelerometerReceiver";
 	private Context mContext;
 	private String labelName;
+	private SampleDB db;
 
 
 
@@ -28,6 +29,7 @@ public class AccelerometerReceiver implements SensorEventListener {
 		mContext = context;
 		this.labelName = labelName;
 		Log.i(TAG,"LabelName = " + labelName);
+		db = new SampleDB(mContext);
 
 	}
 
@@ -40,10 +42,10 @@ public class AccelerometerReceiver implements SensorEventListener {
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
-		 SampleDB db = new SampleDB(mContext);
-		 Date date = new Date();
-		 db.addSample(new Sample(event.values[0],event.values[1],event.values[2],
-				 date.getTime(),labelName));
+
+		Date date = new Date();
+		db.addSample(new Sample(event.values[0],event.values[1],event.values[2],
+				date.getTime(),labelName));
 		// Log.i(TAG,"x , y and z");
 	}
 

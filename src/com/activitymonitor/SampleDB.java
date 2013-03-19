@@ -77,7 +77,7 @@ public class SampleDB {
 			values.put(SampleDBHelper.LABELNAME, sample.getLabelName());
 			db.insert(SampleDBHelper.TABLE, SampleDBHelper.ID, values);
 
-			
+
 
 		} catch (SQLException e) {
 			//  Logger.log(TAG, "Could not insert data into interactions table: " + e);
@@ -95,8 +95,8 @@ public class SampleDB {
 	 */
 	private static String getDBPath() {
 		String path = Environment.getExternalStorageDirectory().getPath() + "/" + BASE_DIR;
-		
-//		Log.d(TAG, "Checking if " + path + " exists");
+
+		//		Log.d(TAG, "Checking if " + path + " exists");
 		File dbDir = new File(path);
 		if (!dbDir.isDirectory()) {
 			try {
@@ -111,19 +111,44 @@ public class SampleDB {
 		}
 		return path;
 	}
+	
+	public String getLatestID(){
+		Log.i(TAG, "Fetching id of last record");
+		SQLiteDatabase db = null;
+		try {
+			db = dbHelper.getReadableDatabase();
+			String[] columns = new String[1];
+			columns[0] = SampleDBHelper.ID;
+			Cursor c = db.query(SampleDBHelper.TABLE, columns, null,
+					null, null, null, SampleDBHelper.ID + " DESC LIMIT 1");
+			c.moveToFirst(); // data?
+			String id = c.getString(c.getColumnIndex("_id"));
+			c.close();
+			return id;
+		} finally {
+			if (db != null)
+				db.close();
+		}
+	}
 
+
+	/**
+	 * Returns a Cursor contains all records with id > specified id
+	 * @param latestId
+	 * @return Cursor which contains the result of the query
+	 */
 	public Cursor getLatestSamples(int latestId) {
-	    Log.i(TAG, "Fetching all interactions starting from id " + (latestId + 1));
-	    SQLiteDatabase db = null;
-	    try {
-	      db = dbHelper.getReadableDatabase();
-	      Cursor c = db.query(SampleDBHelper.TABLE, null, SampleDBHelper.ID + " > " + latestId,
-	                          null, null, null, SampleDBHelper.ID + " ASC");
-	      Log.i(TAG, "Fetched " + c.getCount() + " rows");
-	      return c;
-	    } finally {
-	      if (db != null)
-	        db.close();
-	    }
+		Log.i(TAG, "Fetching all interactions starting from id " + (latestId + 1));
+		SQLiteDatabase db = null;
+		try {
+			db = dbHelper.getReadableDatabase();
+			Cursor c = db.query(SampleDBHelper.TABLE, null, SampleDBHelper.ID + " > " + latestId,
+					null, null, null, SampleDBHelper.ID + " ASC");
+			Log.i(TAG, "Fetched " + c.getCount() + " rows");
+			return c;
+		} finally {
+			if (db != null)
+				db.close();
+		}
 	}
 }

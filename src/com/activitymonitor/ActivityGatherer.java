@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class ActivityGatherer extends Activity {
 	/**
@@ -44,6 +45,7 @@ public class ActivityGatherer extends Activity {
 	public void setService(View view){
 		// Cast View v to Button
 		Button thisButton = (Button) view;
+		Button labelButton = (Button) ActivityGatherer.this.findViewById(R.id.latestbutton);
 		EditText edtLabelName = (EditText) ActivityGatherer.this.findViewById(R.id.edtLabelName);
 		//Set the label name for the next session of recording data
 		labelName = edtLabelName.getText().toString();
@@ -61,10 +63,12 @@ public class ActivityGatherer extends Activity {
 				thisButton.setText(R.string.record);
 				//Need to Stop the service
 				stopMainService();
+				labelButton.setEnabled(true);
 			}
 			else{
 				mIsRecording = true;
 				thisButton.setText(R.string.stop);
+				labelButton.setEnabled(false);
 				//Inform the user the service has begun to record data with a notification
 				try {
 					Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -117,5 +121,10 @@ public class ActivityGatherer extends Activity {
 		stopService(intent);
 	}
 
-
+	public void latestButtonClick(View v){
+		TextView edtLabelName = (TextView) ActivityGatherer.this.findViewById(R.id.txtLatestID);
+		SampleDB db = new SampleDB(getApplicationContext());
+		String id = db.getLatestID();
+		edtLabelName.setText("id = " + id);
+	}
 }
