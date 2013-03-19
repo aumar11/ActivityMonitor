@@ -77,6 +77,8 @@ public class SampleDB {
 			values.put(SampleDBHelper.LABELNAME, sample.getLabelName());
 			db.insert(SampleDBHelper.TABLE, SampleDBHelper.ID, values);
 
+			
+
 		} catch (SQLException e) {
 			//  Logger.log(TAG, "Could not insert data into interactions table: " + e);
 		} finally {
