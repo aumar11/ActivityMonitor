@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -120,11 +121,27 @@ public class ActivityGatherer extends Activity {
 		Intent intent = new Intent(getApplicationContext(), ActivityGathererService.class);
 		stopService(intent);
 	}
-
+	/**
+	 * Sets the view to display the id of the last record added
+	 * to a database
+	 * @param v
+	 */
 	public void latestButtonClick(View v){
 		TextView edtLabelName = (TextView) ActivityGatherer.this.findViewById(R.id.txtLatestID);
 		SampleDB db = new SampleDB(getApplicationContext());
 		String id = db.getLatestID();
 		edtLabelName.setText("id = " + id);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event){
+		//Log.i(TAG, "key code =" + keyCode);
+		if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
+			Log.i(TAG, "The media button has been pressed");
+			Button record = (Button) ActivityGatherer.this.findViewById(R.id.recordbutton);
+			setService(record);
+			return true;
+		}
+		return false;
 	}
 }
