@@ -1,4 +1,4 @@
-package com.activitymonitor;
+package com.activitymonitor.activity;
 
 //
 //InteractionsDBHelper.java

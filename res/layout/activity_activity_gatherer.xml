@@ -6,20 +6,12 @@
 
     <TableRow>
 
-        <Button
-            android:id="@+id/recordbutton"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="setService"
-            android:text="@string/record" />
-
-        <EditText
-            android:id="@+id/edtLabelName"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:inputType="textNoSuggestions" />
+        <Spinner
+            android:id="@+id/spnrAcType"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:entries="@array/type_arrays"
+            android:prompt="@string/type_prompt" />
     </TableRow>
 
     <TableRow>
@@ -29,19 +21,15 @@
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:enabled="true"
             android:onClick="latestButtonClick"
-            android:text="@string/latest"
-            android:enabled="true" />
+            android:text="@string/latest" />
 
         <TextView
             android:id="@+id/txtLatestID"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            />
-
-        <TableRow>
-        </TableRow>
+            android:layout_weight="1" />
     </TableRow>
 
 </TableLayout>

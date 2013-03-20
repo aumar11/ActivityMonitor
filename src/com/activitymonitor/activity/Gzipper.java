@@ -7,7 +7,7 @@
 // Copyright (c) 2012 University of Strathclyde. All rights reserved.
 //
 
-package com.activitymonitor;
+package com.activitymonitor.activity;
 
 
 

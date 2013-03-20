@@ -1,4 +1,4 @@
-package com.activitymonitor;
+package com.activitymonitor.activity;
 
 
 import android.app.AlarmManager;
@@ -23,13 +23,13 @@ public class ActivityGathererService extends Service {
 
 	// AlarmManager for sync and bluetooth discovery services
 	private AlarmManager mAlarmManager;
-	private AccelerometerReceiver mAccelerometerReceiver;
+	private AccelerometerListener mAccelerometerReceiver;
 	private SensorManager mSensorManager;
 	private boolean mGatheringSamples;
 	private Intent mSyncIntent;
 	private PendingIntent mSyncPendingIntent;
 	private boolean mIsSynching;
-	private String labelName;
+
 	/**
 	 * Server synchronisation period (ATM, once every 1 minute).
 	 */
@@ -51,13 +51,11 @@ public class ActivityGathererService extends Service {
 		Log.i(TAG, "Service is running");
 		// Get AlarmManager for sync 
 		mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		//Making sure the label name is right
-		labelName = i.getStringExtra("labelName");
-		Log.d(TAG,labelName);
+
 		// Start gathering data
-		startGathering();
+		//startGathering();
 		//Start syncing to the central server
-		startSync();
+	//	startSync();
 		return 0;
 	}
 	/**
@@ -95,7 +93,7 @@ public class ActivityGathererService extends Service {
 
 	private void startGathering() {
 	
-		mAccelerometerReceiver = new AccelerometerReceiver(getApplicationContext(),labelName);
+		mAccelerometerReceiver = new AccelerometerListener(getApplicationContext());
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mSensorManager.registerListener(mAccelerometerReceiver, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 100000);
 		mGatheringSamples = true;

@@ -6,5 +6,13 @@
     <string name="record">Record Data</string>
     <string name="stop">Stop Recording Data</string>
     <string name="latest">Get Latest id</string>
+    <string name="type_prompt">Choose a Type of Activity</string>
+
+    <string-array name="type_arrays">
+        <item>Sit To Stand</item>
+        <item>Stand to Sit</item>
+        <item>S-T-S</item>
+        <item>S-W-S</item>
+    </string-array>
 
 </resources>

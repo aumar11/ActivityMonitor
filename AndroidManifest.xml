@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.activitymonitor.ActivityGatherer"
+            android:name="com.activitymonitor.activity.ActivityGatherer"
             android:label="@string/app_name"
             android:screenOrientation = "portrait" >
             <intent-filter>
@@ -28,10 +28,10 @@
             </intent-filter>
         </activity>
         
-        <service android:name=".ActivityGathererService" />
-        <service android:name=".SyncService" />
-        <receiver android:name=".SyncAlarmReceiver" />
-        <receiver android:name=".HeadSetReceiver" />
+        <service android:name=".activity.ActivityGathererService" />
+        <service android:name=".activity.SyncService" />
+        <receiver android:name=".activity.SyncAlarmReceiver" />
+        <receiver android:name=".activity.HeadSetReceiver" />
         
     </application>
 
