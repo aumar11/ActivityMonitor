@@ -2,8 +2,11 @@ package com.activitymonitor;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -24,12 +27,20 @@ public class ActivityGatherer extends Activity {
 	public final static String TAG = "ActivityGatherer";
 	private boolean mIsRecording = false;
 	private String labelName;
+	HeadSetReceiver mMediaButtonReceiver = new HeadSetReceiver();
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_activity_gatherer);
+	    ((AudioManager)getSystemService(AUDIO_SERVICE)).registerMediaButtonEventReceiver(new ComponentName(
+                this,
+                HeadSetReceiver.class));
+	    IntentFilter filter = new IntentFilter(Intent.ACTION_MEDIA_BUTTON);
+	    HeadSetReceiver r = new HeadSetReceiver();
+	    filter.setPriority(1000);
+	    registerReceiver(r, filter);
 	}
 
 
@@ -133,15 +144,17 @@ public class ActivityGatherer extends Activity {
 		edtLabelName.setText("id = " + id);
 	}
 	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event){
-		//Log.i(TAG, "key code =" + keyCode);
-		if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
-			Log.i(TAG, "The media button has been pressed");
-			Button record = (Button) ActivityGatherer.this.findViewById(R.id.recordbutton);
-			setService(record);
-			return true;
-		}
-		return false;
-	}
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent event){
+//		//Log.i(TAG, "key code =" + keyCode);
+//		if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
+//			Log.i(TAG, "The media button has been pressed");
+//			Button record = (Button) ActivityGatherer.this.findViewById(R.id.recordbutton);
+//			setService(record);
+//			return true;
+//		}
+//		
+//		 
+//		return false;
+//	}
 }
