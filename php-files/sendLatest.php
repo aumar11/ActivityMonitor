@@ -6,3 +6,7 @@ $query = mysql_query("select _id from sample order by _id desc limit 1");
 while ($row = mysql_fetch_assoc($query)) {
 	echo $row['_id'];
 }
+$query = mysql_query("select activity_id from activity_name order by activity_id desc limit 1");
+while ($row = mysql_fetch_assoc($query)) {
+	echo $row['activity_id'];
+}

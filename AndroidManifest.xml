@@ -28,10 +28,10 @@
             </intent-filter>
         </activity>
         
-        <service android:name=".activity.ActivityGathererService" />
-        <service android:name=".activity.SyncService" />
-        <receiver android:name=".activity.SyncAlarmReceiver" />
-        <receiver android:name=".activity.HeadSetReceiver" />
+        <service android:name=".services.ActivityGathererService" />
+        <service android:name=".services.SyncService" />
+        <receiver android:name=".receivers.SyncAlarmReceiver" />
+        <receiver android:name=".receivers.HeadSetReceiver" />
         
     </application>
 

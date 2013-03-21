@@ -1,9 +1,15 @@
-package com.activitymonitor.activity;
+package com.activitymonitor.receivers;
+
+import com.activitymonitor.preferences.Preferences;
+import com.activitymonitor.services.ActivityGathererService;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
@@ -36,20 +42,32 @@ public class HeadSetReceiver extends BroadcastReceiver {
 
 		if (action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
 			int state = settings.getInt(Preferences.CURRENT_STATE, Preferences.STATE_ERROR);
+			String type = settings.getString(Preferences.CURRENT_TYPE, Preferences.TYPE_ERROR);
 			if(state == Preferences.STATE_OFF){
 				//Start recording data
+				try {
+					Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+					Ringtone r = RingtoneManager.getRingtone(context, notification);
+					r.play();
+				} catch (Exception e) {}
 				editor.putInt(Preferences.CURRENT_STATE, Preferences.STATE_ON);
 				editor.commit();
-				Toast.makeText(context, "Monitoring Activity",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(context, "Monitoring Activity Type: " + type,
+						Toast.LENGTH_SHORT).show();
 				startMainService(context);
 			}
 			else if(state == Preferences.STATE_ON){
 				//stop recording data
+
+				try {
+					Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+					Ringtone r = RingtoneManager.getRingtone(context, notification);
+					r.play();
+				} catch (Exception e) {}
 				editor.putInt(Preferences.CURRENT_STATE, Preferences.STATE_OFF);
 				editor.commit();
 				Toast.makeText(context, "Stopped Monitoring",
-						Toast.LENGTH_LONG).show();
+						Toast.LENGTH_SHORT).show();
 				stopMainService(context);
 			}
 			else{
@@ -58,7 +76,7 @@ public class HeadSetReceiver extends BroadcastReceiver {
 				editor.putInt(Preferences.CURRENT_STATE, Preferences.STATE_OFF);
 				editor.commit();
 				Toast.makeText(context, "An Error Occured",
-						Toast.LENGTH_LONG).show();
+						Toast.LENGTH_SHORT).show();
 			}
 
 		}

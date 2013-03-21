@@ -7,7 +7,7 @@
 // Copyright (c) 2012 University of Strathclyde. All rights reserved.
 //
 
-package com.activitymonitor.activity;
+package com.activitymonitor.services;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -51,6 +51,12 @@ import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
+import com.activitymonitor.database.SampleDB;
+import com.activitymonitor.helpers.CancelableThread;
+import com.activitymonitor.helpers.FixedInputStreamBody;
+import com.activitymonitor.helpers.Gzipper;
+import com.activitymonitor.helpers.Stringer;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -88,7 +94,11 @@ public class SyncService extends Service {
 	/**
 	 * Relative path to the PHP script returning the latest data id on the server.
 	 */
-	private final static String LATEST_PATH = "/activities/sendLatest.php";
+	private final static String LATEST_SAMPLE_PATH = "/activities/sendLatest.php";
+	/**
+	 * Relative path to the PHP script returning the latest data id on the server.
+	 */
+	private final static String LATEST_NAME_PATH = "/activities/sendLatestName.php";
 	/**
 	 * Connection timeout param.
 	 */
@@ -224,7 +234,7 @@ public class SyncService extends Service {
 				DefaultHttpClient httpClient = new DefaultHttpClient(new BasicHttpParams());
 				HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), CONNECTION_TIMEOUT);        
 				try {
-					URI uri = URIUtils.createURI("http", SyncService.HOST, SyncService.PORT, LATEST_PATH, null, null);
+					URI uri = URIUtils.createURI("http", SyncService.HOST, SyncService.PORT, LATEST_SAMPLE_PATH, null, null);
 					Log.i(SyncService.TAG, "URI: " + uri);
 					HttpGet httpGet = new HttpGet(uri);                        
 					HttpResponse httpResponse = httpClient.execute(httpGet);
@@ -251,17 +261,17 @@ public class SyncService extends Service {
 				if (!mHasError) {
 					SampleDB db = new SampleDB(SyncService.this);
 					Cursor cursor = db.getLatestSamples(Integer.parseInt(latest));
-					String s;
+					String csvSample;
 					if (cursor.getCount() > 0) {
-						s = Stringer.csvStringFromCursor(cursor);
-						Log.i(SyncService.TAG, s);
+						csvSample = Stringer.csvStringFromCursor(cursor);
+						Log.i(SyncService.TAG, csvSample);
 					} else {
 						Log.i(SyncService.TAG, "No new interactions to store");
 						break;
 					}
 					byte[] zip = null;
 					try {
-						zip = Gzipper.zip(s.getBytes(SyncService.CHARSET));
+						zip = Gzipper.zip(csvSample.getBytes(SyncService.CHARSET));
 					} catch (Exception e) {}
 					Log.i(SyncService.TAG, "Zip: " + zip);
 					if (zip != null) 

@@ -6,7 +6,7 @@
 // Copyright (c) 2012 University of Strathclyde. All rights reserved.
 //
 
-package com.activitymonitor.activity;
+package com.activitymonitor.helpers;
 
 import java.io.InputStream;
 

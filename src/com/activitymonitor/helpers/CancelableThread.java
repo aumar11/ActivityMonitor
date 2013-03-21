@@ -12,7 +12,7 @@
  * General Public License for more details.
  */
 
-package com.activitymonitor.activity;
+package com.activitymonitor.helpers;
 
 public abstract class CancelableThread extends Thread {
   public static final String TAG = "CancelableThread";

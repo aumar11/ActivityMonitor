@@ -1,4 +1,4 @@
-package com.activitymonitor.activity;
+package com.activitymonitor.database;
 
 //
 //Sample.java
@@ -27,7 +27,8 @@ public class Sample {
 	private float y;
 	private float z;
 	private long timestamp;
-	private String labelName;
+	private String activity_type;
+	private int activity_id;
 	/**
 	 * Constructs an object of type {@code Sample}.
 	 * @param timestamp the time the sample was recorded
@@ -36,12 +37,13 @@ public class Sample {
 	 * @param z the value of the Z axis of the accelerometer
 
 	 */
-	public Sample(float x, float y, float z,long timestamp, String labelName ) {
+	public Sample(float x, float y, float z,long timestamp, String activity_type, int activity_id ) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.timestamp = timestamp;
-		this.labelName = labelName;
+		this.activity_type = activity_type;
+		this.activity_id = activity_id;
 	}
 
 	/**
@@ -76,10 +78,17 @@ public class Sample {
 	}
 
 	/**
-	 *@return The label given to the sample
+	 *@return The activity_type given to the sample
 	 */
-	public String getLabelName(){
-		return labelName;
+	public String getActivityType(){
+		return activity_type;
+	}
+	
+	/**
+	 *@return The activity_id given to the sample
+	 */
+	public int getActivityID(){
+		return activity_id;
 	}
 
 	/**
@@ -94,7 +103,8 @@ public class Sample {
 		result.append(" y: " + y + NEW_LINE);
 		result.append(" z: " + z + NEW_LINE);
 		result.append(" timestamp: " + timestamp + NEW_LINE);
-		result.append(" labelName: " + labelName + NEW_LINE);				
+		result.append(" activity_type: " + activity_type + NEW_LINE);
+		result.append(" activity_id: " + activity_id + NEW_LINE);
 		result.append("}");
 		return result.toString();
 	}

@@ -7,9 +7,11 @@
 // Copyright (c) 2012 University of Strathclyde. All rights reserved.
 //
 
-package com.activitymonitor.activity;
+package com.activitymonitor.receivers;
 
 
+
+import com.activitymonitor.services.SyncService;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,7 +28,7 @@ import android.util.Log;
  * @see android.content.Intent
  * @see android.app.AlarmManager
  * @see com.social.gatherer.SocialGathererService
- * @see com.social.gatherer.SyncService
+ * @see com.activitymonitor.services.social.gatherer.SyncService
  */
 public class SyncAlarmReceiver extends BroadcastReceiver {
   /**
@@ -41,7 +43,7 @@ public class SyncAlarmReceiver extends BroadcastReceiver {
    * @param intent The {@code Intent} being received.
    * @see android.content.Context
    * @see android.content.Intent
-   * @see com.social.gatherer.SyncService
+   * @see com.activitymonitor.services.social.gatherer.SyncService
    */
   @Override
   public void onReceive(Context context, Intent intent) {

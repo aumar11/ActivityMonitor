@@ -1,4 +1,6 @@
-package com.activitymonitor.activity;
+package com.activitymonitor.listeners;
+
+import com.activitymonitor.preferences.Preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;

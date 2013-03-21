@@ -5,7 +5,7 @@
 // Created by Jakub Konka on 30/04/2012
 // Copyright (c) 2012 University of Strathclyde. All rights reserved.
 //
-package com.activitymonitor.activity;
+package com.activitymonitor.preferences;
 
 
 
@@ -37,6 +37,8 @@ public class Preferences {
   public static final String STS = "s-t-s";
   
   public static final String SWS = "s-w-s";
+  
+  public static final String TYPE_ERROR = "ERROR";
   
   public static final String CURRENT_TYPE = "sit_to_stand";
   

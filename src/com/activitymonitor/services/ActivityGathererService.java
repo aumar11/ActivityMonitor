@@ -1,5 +1,8 @@
-package com.activitymonitor.activity;
+package com.activitymonitor.services;
 
+
+import com.activitymonitor.listeners.AccelerometerListener;
+import com.activitymonitor.receivers.SyncAlarmReceiver;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -53,7 +56,7 @@ public class ActivityGathererService extends Service {
 		mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
 		// Start gathering data
-		//startGathering();
+		startGathering();
 		//Start syncing to the central server
 	//	startSync();
 		return 0;
@@ -67,7 +70,7 @@ public class ActivityGathererService extends Service {
 		super.onDestroy();
 		Log.i(TAG,"Stopping the service");
 		stopGathering();
-		stopSync();
+		//stopSync();
 	}
 	/**
 	 * Starts synchronisation service. This method schedules for repeating the execution of

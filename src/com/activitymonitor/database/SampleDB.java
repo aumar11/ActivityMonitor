@@ -1,4 +1,4 @@
-package com.activitymonitor.activity;
+package com.activitymonitor.database;
 
 //
 //SampleDB.java
@@ -74,11 +74,9 @@ public class SampleDB {
 			values.put(SampleDBHelper.Y, sample.getY());
 			values.put(SampleDBHelper.Z, sample.getZ());
 			values.put(SampleDBHelper.TIMESTAMP, sample.getTimestamp());
-			values.put(SampleDBHelper.LABELNAME, sample.getLabelName());
-			db.insert(SampleDBHelper.TABLE, SampleDBHelper.ID, values);
-
-
-
+			values.put(SampleDBHelper.ACTIVITY_TYPE, sample.getActivityType());
+			values.put(SampleDBHelper.ACTIVITY_ID, sample.getActivityID());
+			db.insert(SampleDBHelper.SAMPLE_TABLE, SampleDBHelper.ID, values);
 		} catch (SQLException e) {
 			//  Logger.log(TAG, "Could not insert data into interactions table: " + e);
 		} finally {
@@ -87,6 +85,30 @@ public class SampleDB {
 		}
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @return id of the last record added or
+	 * -1 if error
+	 */
+	public long addActivityName(String name){
+		SQLiteDatabase db = null;
+		try {
+			db = dbHelper.getWritableDatabase();
+			ContentValues values = new ContentValues();
+			values.put(SampleDBHelper.ACTIVITY_NAME, name);
+			long id = db.insert(SampleDBHelper.ACTIVITY_NAME_TABLE, SampleDBHelper.ID, values);
+			Log.i(TAG, "Added " + name + " to id " + id);
+			return id;
+
+		} catch (SQLException e) {
+			//  Logger.log(TAG, "Could not insert data into interactions table: " + e);
+		} finally {
+			if (db != null)
+				db.close();
+		}
+		return -1;
+	}
 
 
 	/**
@@ -111,7 +133,7 @@ public class SampleDB {
 		}
 		return path;
 	}
-	
+
 	public String getLatestID(){
 		Log.i(TAG, "Fetching id of last record");
 		SQLiteDatabase db = null;
@@ -119,7 +141,7 @@ public class SampleDB {
 			db = dbHelper.getReadableDatabase();
 			String[] columns = new String[1];
 			columns[0] = SampleDBHelper.ID;
-			Cursor c = db.query(SampleDBHelper.TABLE, columns, null,
+			Cursor c = db.query(SampleDBHelper.SAMPLE_TABLE, columns, null,
 					null, null, null, SampleDBHelper.ID + " DESC LIMIT 1");
 			c.moveToFirst(); // data?
 			String id = c.getString(c.getColumnIndex("_id"));
@@ -142,8 +164,28 @@ public class SampleDB {
 		SQLiteDatabase db = null;
 		try {
 			db = dbHelper.getReadableDatabase();
-			Cursor c = db.query(SampleDBHelper.TABLE, null, SampleDBHelper.ID + " > " + latestId,
+			Cursor c = db.query(SampleDBHelper.SAMPLE_TABLE, null, SampleDBHelper.ID + " > " + latestId,
 					null, null, null, SampleDBHelper.ID + " ASC");
+			Log.i(TAG, "Fetched " + c.getCount() + " rows");
+			return c;
+		} finally {
+			if (db != null)
+				db.close();
+		}
+	}
+	
+	/**
+	 * Returns a Cursor contains all records with id > specified id
+	 * @param latestId
+	 * @return Cursor which contains the result of the query
+	 */
+	public Cursor getLatestNames(int latestId) {
+		Log.i(TAG, "Fetching all interactions starting from id " + (latestId + 1));
+		SQLiteDatabase db = null;
+		try {
+			db = dbHelper.getReadableDatabase();
+			Cursor c = db.query(SampleDBHelper.ACTIVITY_NAME_TABLE, null, SampleDBHelper.ACTIVITY_ID + " > " + latestId,
+					null, null, null, SampleDBHelper.ACTIVITY_ID + " ASC");
 			Log.i(TAG, "Fetched " + c.getCount() + " rows");
 			return c;
 		} finally {
