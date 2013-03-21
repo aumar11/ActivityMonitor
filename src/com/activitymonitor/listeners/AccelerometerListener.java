@@ -35,9 +35,10 @@ public class AccelerometerListener implements SensorEventListener {
 		Date date = new Date();
 		mContext = context;
 		SharedPreferences settings = mContext.getSharedPreferences(Preferences.PREFS_NAME, Context.MODE_PRIVATE);
-		activity_type = settings.getString(Preferences.CURRENT_TYPE, Preferences.SIT_TO_STAND) +"_" + date.getTime();
+		activity_type = settings.getString(Preferences.CURRENT_TYPE, Preferences.SIT_TO_STAND);
+		String activity_name = activity_type +"_" + date.getTime();
 		db = new SampleDB(mContext);
-		activity_id = (int) db.addActivityName(activity_type);
+		activity_id = (int) db.addActivityName(activity_name);
 
 	}
 
@@ -52,7 +53,7 @@ public class AccelerometerListener implements SensorEventListener {
 		Date date = new Date();
 		db.addSample(new Sample(event.values[0],event.values[1],event.values[2],
 				date.getTime(),activity_type,activity_id));
-		Log.i(TAG,event.values[0] + ":" + event.values[1]+ ":" + event.values[2] +activity_type + " " + activity_id);
+		//Log.i(TAG,event.values[0] + ":" + event.values[1]+ ":" + event.values[2] +activity_type + " " + activity_id);
 	}
 
 }

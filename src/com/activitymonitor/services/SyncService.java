@@ -86,19 +86,20 @@ public class SyncService extends Service {
 	/**
 	 * Relative path to the PHP script accepting and parsing data on the server.
 	 */
-	private final static String DATA_PATH = "/activities/syncData.php";
+	private final static String DATA_SAMPLE_PATH = "/activities/syncData.php";
+	/**
+	 * Relative path to the PHP script accepting and parsing data on the server.
+	 */
+	private final static String DATA_NAMES_PATH = "/activities/syncNames.php";
 	/**
 	 * Server host name.
 	 */
-	private final static String HOST = "10.100.0.70";
+	private final static String HOST = "10.100.0.125";
 	/**
 	 * Relative path to the PHP script returning the latest data id on the server.
 	 */
 	private final static String LATEST_SAMPLE_PATH = "/activities/sendLatest.php";
-	/**
-	 * Relative path to the PHP script returning the latest data id on the server.
-	 */
-	private final static String LATEST_NAME_PATH = "/activities/sendLatestName.php";
+
 	/**
 	 * Connection timeout param.
 	 */
@@ -170,7 +171,7 @@ public class SyncService extends Service {
 	 * using GNU zip.
 	 * @param mArray {@code byte} array.
 	 */
-	private int updateServer(byte[] mArray) {
+	private int updateServer(byte[] mArray,String datapath) {
 		Log.i(TAG, "Synchronising new interactions with Sederunt server");
 		try {
 			FixedInputStreamBody fsb = new FixedInputStreamBody(new ByteArrayInputStream(mArray),
@@ -180,7 +181,7 @@ public class SyncService extends Service {
 			MultipartEntity multipartEntity = new MultipartEntity();
 			multipartEntity.addPart("data", fsb);
 
-			URI uri = URIUtils.createURI("http", SyncService.HOST, SyncService.PORT, DATA_PATH, null, null);
+			URI uri = URIUtils.createURI("http", SyncService.HOST, SyncService.PORT, datapath, null, null);
 			HttpPost httpPost = new HttpPost(uri);
 			httpPost.setEntity(multipartEntity);
 			DefaultHttpClient httpClient = new DefaultHttpClient(new BasicHttpParams());
@@ -194,7 +195,7 @@ public class SyncService extends Service {
 			StatusLine status = httpResponse.getStatusLine();
 			int statusCode = status.getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
-				Log.i(TAG, "Updated successfully");
+				Log.i(TAG, "Updated successfully" + datapath);
 				return 0;
 			} else {
 				Log.i(TAG, "Statuscode: " + statusCode);
@@ -228,9 +229,11 @@ public class SyncService extends Service {
 		public void run() {
 			Log.i(SyncService.TAG, "Synchronising device with external server");
 			int tryCount = 0;
+			String latestNameID = "";
+			String latestSampleID = "";
 			while (tryCount < MAXIMUM_NETWORK_RETRIES + 1) {
 				Log.i(SyncService.TAG, "Attempt: " + (tryCount + 1));
-				String latest = new String();
+				String latestData = new String();
 				DefaultHttpClient httpClient = new DefaultHttpClient(new BasicHttpParams());
 				HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), CONNECTION_TIMEOUT);        
 				try {
@@ -242,10 +245,17 @@ public class SyncService extends Service {
 					if (statusCode == HttpStatus.SC_OK) {
 						HttpEntity httpEntity = httpResponse.getEntity();
 						if (httpEntity != null) {
-							latest = EntityUtils.toString(httpEntity, SyncService.CHARSET);
-							if(latest.equals(""))
-								latest = "0";
-							Log.i(SyncService.TAG, "Latest ID on server: " + latest);
+							latestData = EntityUtils.toString(httpEntity, SyncService.CHARSET);
+							String[] data = latestData.split("\\<br\\>");
+							
+							latestNameID = data[0];
+							latestSampleID = data[1];	
+							
+//							if(latest.equals(""))
+//								latest = "0";
+							Log.i(SyncService.TAG, "Latest ID on activity_names: " + latestNameID);
+							Log.i(SyncService.TAG, "Latest ID on sample: " + latestSampleID);
+
 						} else {
 							Log.d(SyncService.TAG, "Server did not respond");
 							mHasError = true;
@@ -260,22 +270,39 @@ public class SyncService extends Service {
 				}               
 				if (!mHasError) {
 					SampleDB db = new SampleDB(SyncService.this);
-					Cursor cursor = db.getLatestSamples(Integer.parseInt(latest));
-					String csvSample;
-					if (cursor.getCount() > 0) {
-						csvSample = Stringer.csvStringFromCursor(cursor);
-						Log.i(SyncService.TAG, csvSample);
+					Cursor cursorName = db.getLatestNames(Integer.parseInt(latestNameID));
+					Cursor cursorSample = db.getLatestSamples(Integer.parseInt(latestNameID));
+					String csvNames;
+					String csvSamples;
+					if (cursorName.getCount() > 0) {
+						csvNames = Stringer.csvStringFromCursor(cursorName);
+						cursorName.close();
+						//Log.i(SyncService.TAG, csvNames);
 					} else {
 						Log.i(SyncService.TAG, "No new interactions to store");
 						break;
 					}
-					byte[] zip = null;
+					if (cursorSample.getCount() > 0) {
+						csvSamples = Stringer.csvStringFromCursor(cursorSample);
+						cursorSample.close();
+						//Log.i(SyncService.TAG, csvSamples);
+					} else {
+						Log.i(SyncService.TAG, "No new interactions to store");
+						break;
+					}
+					byte[] zipNames = null;
+					byte[] zipSamples = null;
 					try {
-						zip = Gzipper.zip(csvSample.getBytes(SyncService.CHARSET));
+						zipNames = Gzipper.zip(csvNames.getBytes(SyncService.CHARSET));
+						zipSamples = Gzipper.zip(csvSamples.getBytes(SyncService.CHARSET));
 					} catch (Exception e) {}
-					Log.i(SyncService.TAG, "Zip: " + zip);
-					if (zip != null) 
-						updateServer(zip);
+					Log.i(SyncService.TAG, "ZipNames: " + zipNames);
+					Log.i(SyncService.TAG, "ZipSamples: " + zipSamples);
+					if (zipNames != null) 
+						updateServer(zipSamples, DATA_NAMES_PATH);
+					if (zipSamples != null) 
+						updateServer(zipSamples, DATA_SAMPLE_PATH);
+
 				}
 				if (mHasError) {
 					tryCount++;

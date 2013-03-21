@@ -58,7 +58,7 @@ public class ActivityGathererService extends Service {
 		// Start gathering data
 		startGathering();
 		//Start syncing to the central server
-	//	startSync();
+		startSync();
 		return 0;
 	}
 	/**
@@ -70,7 +70,7 @@ public class ActivityGathererService extends Service {
 		super.onDestroy();
 		Log.i(TAG,"Stopping the service");
 		stopGathering();
-		//stopSync();
+		stopSync();
 	}
 	/**
 	 * Starts synchronisation service. This method schedules for repeating the execution of
