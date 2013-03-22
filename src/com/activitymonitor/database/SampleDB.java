@@ -144,7 +144,7 @@ public class SampleDB {
 			Cursor c = db.query(SampleDBHelper.SAMPLE_TABLE, columns, null,
 					null, null, null, SampleDBHelper.ID + " DESC LIMIT 1");
 			c.moveToFirst(); // data?
-			String id = c.getString(c.getColumnIndex("_id"));
+			String id = c.getString(c.getColumnIndex("id"));
 			c.close();
 			return id;
 		} finally {
@@ -166,7 +166,7 @@ public class SampleDB {
 			db = dbHelper.getReadableDatabase();
 			Cursor c = db.query(SampleDBHelper.SAMPLE_TABLE, null, SampleDBHelper.ID + " > " + latestId,
 					null, null, null, SampleDBHelper.ID + " ASC");
-			Log.i(TAG, "Fetched " + c.getCount() + " rows");
+			Log.i(TAG, "Fetched samples " + c.getCount() + " rows");
 			return c;
 		} finally {
 			if (db != null)
@@ -180,13 +180,13 @@ public class SampleDB {
 	 * @return Cursor which contains the result of the query
 	 */
 	public Cursor getLatestNames(int latestId) {
-		Log.i(TAG, "Fetching all interactions starting from id " + (latestId + 1));
+		Log.i(TAG, "Fetching all interactions starting from activity_id " + (latestId + 1));
 		SQLiteDatabase db = null;
 		try {
 			db = dbHelper.getReadableDatabase();
-			Cursor c = db.query(SampleDBHelper.ACTIVITY_NAME_TABLE, null, SampleDBHelper.ACTIVITY_ID + " > " + latestId,
-					null, null, null, SampleDBHelper.ACTIVITY_ID + " ASC");
-			Log.i(TAG, "Fetched " + c.getCount() + " rows");
+			Cursor c = db.query(SampleDBHelper.ACTIVITY_NAME_TABLE, null, SampleDBHelper.ID + " > " + latestId ,
+					null, null, null, SampleDBHelper.ID + " ASC");
+			Log.i(TAG, "Fetched names " + c.getCount() + " rows");
 			return c;
 		} finally {
 			if (db != null)

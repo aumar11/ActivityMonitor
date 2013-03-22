@@ -94,7 +94,7 @@ public class SyncService extends Service {
 	/**
 	 * Server host name.
 	 */
-	private final static String HOST = "10.100.0.125";
+	private final static String HOST = "10.200.0.38";
 	/**
 	 * Relative path to the PHP script returning the latest data id on the server.
 	 */
@@ -169,25 +169,50 @@ public class SyncService extends Service {
 	/**
 	 * Updates the server with new data prepared as a CSV file, and compressed
 	 * using GNU zip.
-	 * @param mArray {@code byte} array.
+	 * @param namesArray {@code byte} array.
 	 */
-	private int updateServer(byte[] mArray,String datapath) {
+	private int updateServer(byte[] namesArray,boolean updateNames, byte[] samplesArray,boolean updateSamples) {
 		Log.i(TAG, "Synchronising new interactions with Sederunt server");
+		String uN ="";
+		String uS = "";
 		try {
-			FixedInputStreamBody fsb = new FixedInputStreamBody(new ByteArrayInputStream(mArray),
-					mArray.length,
+			FixedInputStreamBody fsb = new FixedInputStreamBody(new ByteArrayInputStream(namesArray),
+					namesArray.length,
 					"application/octet-stream",
 					"test.txt");
+			
+			FixedInputStreamBody fsb2 = new FixedInputStreamBody(new ByteArrayInputStream(samplesArray),
+					samplesArray.length,
+					"application/octet-stream",
+					"test1.txt");
+			if(updateNames){
+				uN = "true";
+			}
+			else{
+				uN = "false";
+			}
+			
+			if(updateSamples){
+				uS = "true";
+			}
+			else{
+				uS = "false";
+			}
+			
 			MultipartEntity multipartEntity = new MultipartEntity();
-			multipartEntity.addPart("data", fsb);
+			multipartEntity.addPart("names", fsb);
+			multipartEntity.addPart("samples", fsb2);
+			multipartEntity.addPart("uN", new StringBody(uN, Charset.forName(SyncService.CHARSET)));
+			multipartEntity.addPart("uS", new StringBody(uS, Charset.forName(SyncService.CHARSET)));
+			
+			
 
-			URI uri = URIUtils.createURI("http", SyncService.HOST, SyncService.PORT, datapath, null, null);
+			URI uri = URIUtils.createURI("http", SyncService.HOST, SyncService.PORT, DATA_SAMPLE_PATH, null, null);
 			HttpPost httpPost = new HttpPost(uri);
 			httpPost.setEntity(multipartEntity);
 			DefaultHttpClient httpClient = new DefaultHttpClient(new BasicHttpParams());
 			HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), CONNECTION_TIMEOUT);
-
-		//	httpClient.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE , true);            
+			Log.i(TAG,"are we getting in here?");
 
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 			HttpEntity entity = httpResponse.getEntity();
@@ -195,7 +220,7 @@ public class SyncService extends Service {
 			StatusLine status = httpResponse.getStatusLine();
 			int statusCode = status.getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
-				Log.i(TAG, "Updated successfully" + datapath);
+				Log.i(TAG, "Updated successfully" + DATA_SAMPLE_PATH);
 				return 0;
 			} else {
 				Log.i(TAG, "Statuscode: " + statusCode);
@@ -251,8 +276,6 @@ public class SyncService extends Service {
 							latestNameID = data[0];
 							latestSampleID = data[1];	
 							
-//							if(latest.equals(""))
-//								latest = "0";
 							Log.i(SyncService.TAG, "Latest ID on activity_names: " + latestNameID);
 							Log.i(SyncService.TAG, "Latest ID on sample: " + latestSampleID);
 
@@ -271,13 +294,16 @@ public class SyncService extends Service {
 				if (!mHasError) {
 					SampleDB db = new SampleDB(SyncService.this);
 					Cursor cursorName = db.getLatestNames(Integer.parseInt(latestNameID));
-					Cursor cursorSample = db.getLatestSamples(Integer.parseInt(latestNameID));
+					Cursor cursorSample = db.getLatestSamples(Integer.parseInt(latestSampleID));
 					String csvNames;
 					String csvSamples;
+					boolean updateNames = false;
+					boolean updateSamples = false;
+					
 					if (cursorName.getCount() > 0) {
 						csvNames = Stringer.csvStringFromCursor(cursorName);
 						cursorName.close();
-						//Log.i(SyncService.TAG, csvNames);
+						Log.i(SyncService.TAG, "csv names " + csvNames);
 					} else {
 						Log.i(SyncService.TAG, "No new interactions to store");
 						break;
@@ -285,7 +311,7 @@ public class SyncService extends Service {
 					if (cursorSample.getCount() > 0) {
 						csvSamples = Stringer.csvStringFromCursor(cursorSample);
 						cursorSample.close();
-						//Log.i(SyncService.TAG, csvSamples);
+						Log.i(SyncService.TAG, "csv samples " + csvSamples);
 					} else {
 						Log.i(SyncService.TAG, "No new interactions to store");
 						break;
@@ -298,10 +324,18 @@ public class SyncService extends Service {
 					} catch (Exception e) {}
 					Log.i(SyncService.TAG, "ZipNames: " + zipNames);
 					Log.i(SyncService.TAG, "ZipSamples: " + zipSamples);
-					if (zipNames != null) 
-						updateServer(zipSamples, DATA_NAMES_PATH);
-					if (zipSamples != null) 
-						updateServer(zipSamples, DATA_SAMPLE_PATH);
+					if (zipNames == null){ 
+						zipNames = new byte[]{0};
+					}
+					else
+						updateNames = true;
+					if (zipSamples == null){
+						zipSamples = new byte[]{0};
+					}
+					else
+						updateSamples = true;
+					
+						updateServer(zipNames,updateNames,zipSamples,updateSamples);
 
 				}
 				if (mHasError) {
