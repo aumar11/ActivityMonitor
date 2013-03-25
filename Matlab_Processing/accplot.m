@@ -1,15 +1,26 @@
 %javaaddpath 'mysql-connector-java-5.1.24-bin.jar';
 conn=database('samples', 'root', '', 'com.mysql.jdbc.Driver', 'jdbc:mysql://localhost/');
-query = exec(conn,'SELECT * FROM sample WHERE activity_id = 2');
+curs = exec(conn,'SELECT * FROM activity');
 setdbprefs('DataReturnFormat','structure');
-query = fetch(query);
-id = getfield(query.Data,'id');
-x = getfield(query.Data,'x');
-y = getfield(query.Data,'y');
-z = getfield(query.Data,'z');
-timestamp = getfield(query.Data,'timestamp');
-close(conn);
-time = datenum( timestamp, 'yyyy-mm-dd HH:MM:SS.FFF');
+curs = fetch(curs);
+rows = length(getfield(curs.Data,'id'));
+names = getfield(curs.Data,'activity_name');
+
+for i=1:rows,
+    base = 'SELECT * FROM sample Where activity_id = ';
+    rowString = num2str(i);
+    query = strcat(base,rowString);
+    curs = exec(conn,query);
+    setdbprefs('DataReturnFormat','structure');
+    curs = fetch(curs);
+    name = names(i);
+    id = getfield(curs.Data,'id');
+    x = getfield(curs.Data,'x');
+    y = getfield(curs.Data,'y');
+    z = getfield(curs.Data,'z');
+    timestamp = getfield(curs.Data,'timestamp');
+    
+    time = datenum( timestamp, 'yyyy-mm-dd HH:MM:SS.FFF');
 %# centimeters units
 X = 21.0;                  %# A3 paper size
 Y = 14.8;                  %# A3 paper size
@@ -19,7 +30,7 @@ xSize = X - 2*xMargin;     %# figure size on paper (widht & hieght)
 ySize = Y - 2*yMargin;     %# figure size on paper (widht & hieght)
 
 %# create figure/axis
-figure('Menubar','none')
+fig = figure('Menubar','none');
 
 plot(time,x,'x',time,y,'x',time,z,'x');
 datetick('x','dd-mm HH:MM:SS');
@@ -44,5 +55,11 @@ set(gcf, 'PaperSize',[X Y])
 set(gcf, 'PaperPosition',[xMargin yMargin xSize ySize])
 set(gcf, 'PaperOrientation','portrait')
 
+saveas = strcat(name,'.pdf');
 %# export to PDF and open file
-print -dpdf -r0 out.pdf
+%print -dpdf -r0 saveas
+%print(fig, '-dpdf', saveas) ;   
+end
+
+
+close(conn);
