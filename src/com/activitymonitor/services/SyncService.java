@@ -11,10 +11,14 @@ package com.activitymonitor.services;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -61,6 +65,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.telephony.TelephonyManager;
@@ -94,7 +100,7 @@ public class SyncService extends Service {
 	/**
 	 * Server host name.
 	 */
-	private final static String HOST = "10.200.0.38";
+	private static String HOST = "10.200.0.214";
 	/**
 	 * Relative path to the PHP script returning the latest data id on the server.
 	 */
@@ -135,6 +141,7 @@ public class SyncService extends Service {
 		mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
 		mWakeLock.acquire();
+//		getIpAddr();
 	}
 
 	/**
@@ -180,7 +187,7 @@ public class SyncService extends Service {
 					namesArray.length,
 					"application/octet-stream",
 					"test.txt");
-			
+
 			FixedInputStreamBody fsb2 = new FixedInputStreamBody(new ByteArrayInputStream(samplesArray),
 					samplesArray.length,
 					"application/octet-stream",
@@ -191,21 +198,21 @@ public class SyncService extends Service {
 			else{
 				uN = "false";
 			}
-			
+
 			if(updateSamples){
 				uS = "true";
 			}
 			else{
 				uS = "false";
 			}
-			
+
 			MultipartEntity multipartEntity = new MultipartEntity();
 			multipartEntity.addPart("names", fsb);
 			multipartEntity.addPart("samples", fsb2);
 			multipartEntity.addPart("uN", new StringBody(uN, Charset.forName(SyncService.CHARSET)));
 			multipartEntity.addPart("uS", new StringBody(uS, Charset.forName(SyncService.CHARSET)));
-			
-			
+
+
 
 			URI uri = URIUtils.createURI("http", SyncService.HOST, SyncService.PORT, DATA_SAMPLE_PATH, null, null);
 			HttpPost httpPost = new HttpPost(uri);
@@ -232,7 +239,23 @@ public class SyncService extends Service {
 			mHasError = true;
 			return -1;
 		}
+
+
 	}
+
+//	public String getIpAddr() {
+//		   WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+//		   WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+//		   int ip = wifiInfo.getIpAddress();
+//		   int a = (ip & 0xff);
+//		   int b = (ip >> 8 & 0xff);
+//		   int c = (ip >> 16 & 0xff);
+//		   int d = (ip >> 24 & 0xff);
+//
+//		   String ipString = String.format("%d.%d.%d.%d",a,b,c,d);
+//		   Log.i(TAG,"IP address: "+ ipString);
+//		   return ipString;
+//		}
 
 	/**
 	 * Private nested class implementing cancelable thread. This class performs
@@ -272,10 +295,10 @@ public class SyncService extends Service {
 						if (httpEntity != null) {
 							latestData = EntityUtils.toString(httpEntity, SyncService.CHARSET);
 							String[] data = latestData.split("\\<br\\>");
-							
+
 							latestNameID = data[0];
 							latestSampleID = data[1];	
-							
+
 							Log.i(SyncService.TAG, "Latest ID on activity_names: " + latestNameID);
 							Log.i(SyncService.TAG, "Latest ID on sample: " + latestSampleID);
 
@@ -295,19 +318,16 @@ public class SyncService extends Service {
 					SampleDB db = new SampleDB(SyncService.this);
 					Cursor cursorName = db.getLatestNames(Integer.parseInt(latestNameID));
 					Cursor cursorSample = db.getLatestSamples(Integer.parseInt(latestSampleID));
-					String csvNames;
+					String csvNames ="";
 					String csvSamples;
 					boolean updateNames = false;
 					boolean updateSamples = false;
-					
+
 					if (cursorName.getCount() > 0) {
 						csvNames = Stringer.csvStringFromCursor(cursorName);
 						cursorName.close();
 						Log.i(SyncService.TAG, "csv names " + csvNames);
-					} else {
-						Log.i(SyncService.TAG, "No new interactions to store");
-						break;
-					}
+					} 
 					if (cursorSample.getCount() > 0) {
 						csvSamples = Stringer.csvStringFromCursor(cursorSample);
 						cursorSample.close();
@@ -324,7 +344,7 @@ public class SyncService extends Service {
 					} catch (Exception e) {}
 					Log.i(SyncService.TAG, "ZipNames: " + zipNames);
 					Log.i(SyncService.TAG, "ZipSamples: " + zipSamples);
-					if (zipNames == null){ 
+					if (zipNames == null || csvNames==""){ 
 						zipNames = new byte[]{0};
 					}
 					else
@@ -334,8 +354,8 @@ public class SyncService extends Service {
 					}
 					else
 						updateSamples = true;
-					
-						updateServer(zipNames,updateNames,zipSamples,updateSamples);
+
+					updateServer(zipNames,updateNames,zipSamples,updateSamples);
 
 				}
 				if (mHasError) {

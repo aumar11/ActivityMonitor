@@ -2,6 +2,7 @@ package com.activitymonitor.listeners;
 
 
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.activitymonitor.database.Sample;
@@ -24,6 +25,7 @@ public class AccelerometerListener implements SensorEventListener {
 	private String activity_type;
 	private int activity_id;
 	private SampleDB db;
+	private SimpleDateFormat sdf;
 
 
 
@@ -39,6 +41,7 @@ public class AccelerometerListener implements SensorEventListener {
 		String activity_name = activity_type +"_" + date.getTime();
 		db = new SampleDB(mContext);
 		activity_id = (int) db.addActivityName(activity_name);
+		sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
 	}
 
@@ -51,8 +54,9 @@ public class AccelerometerListener implements SensorEventListener {
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		Date date = new Date();
+		String sDate= sdf.format(date);
 		db.addSample(new Sample(event.values[0],event.values[1],event.values[2],
-				date.getTime(),activity_type,activity_id));
+				sDate ,activity_type,activity_id));
 		//Log.i(TAG,event.values[0] + ":" + event.values[1]+ ":" + event.values[2] +activity_type + " " + activity_id);
 	}
 

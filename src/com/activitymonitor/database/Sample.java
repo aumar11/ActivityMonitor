@@ -26,7 +26,7 @@ public class Sample {
 	private float x;
 	private float y;
 	private float z;
-	private long timestamp;
+	private String timestamp;
 	private String activity_type;
 	private int activity_id;
 	/**
@@ -37,7 +37,7 @@ public class Sample {
 	 * @param z the value of the Z axis of the accelerometer
 
 	 */
-	public Sample(float x, float y, float z,long timestamp, String activity_type, int activity_id ) {
+	public Sample(float x, float y, float z,String timestamp, String activity_type, int activity_id ) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -49,7 +49,7 @@ public class Sample {
 	/**
 	 * @return The timestamp of the sample.
 	 */
-	public long getTimestamp() {
+	public String getTimestamp() {
 		return timestamp;
 	}
 
