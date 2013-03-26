@@ -10,13 +10,36 @@ y = getfield(curs.Data,'y');
 z = getfield(curs.Data,'z');
 timestamp = getfield(curs.Data,'timestamp');
 close(conn);
+xth = -5;
+yth = -5;
+zth = 4;
 
 filterx = smooth(x, 15, 'moving');
 filtery = smooth(y, 15, 'moving');
 filterz = smooth(z, 15, 'moving');
+length(filterx)
+length(filtery)
+length(filterz)
 ticknum = length(id);
 ticknum = round(ticknum/20);
 time = datenum( timestamp, 'yyyy-mm-dd HH:MM:SS.FFF');
+active = true;
+
+for i=1:length(filterx),
+    if(active)
+        if(filterx(i) < xth && filtery(i)> yth &&filterz(i)>zth)
+            active = false;
+            strcat('Sedentary at ',timestamp(i))
+        end
+    else
+        if(filterx(i) > xth && filtery(i)< yth &&filterz(i)<zth)
+            active = true;
+            strcat('Active at ',timestamp(i))
+        end
+      
+    end
+end
+
 %time2 = datestr(timestamp,'HH:MM:SS.FFF');
 
 %# centimeters units
