@@ -2,6 +2,7 @@ package com.activitymonitor.receivers;
 
 import com.activitymonitor.preferences.Preferences;
 import com.activitymonitor.services.ActivityGathererService;
+import com.activitymonitor.services.SyncService;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -101,6 +102,8 @@ public class HeadSetReceiver extends BroadcastReceiver {
 	public void stopMainService(Context context){
 		Intent intent = new Intent(context, ActivityGathererService.class);
 		context.stopService(intent);
+	    Intent syncIntent = new Intent(context, SyncService.class);
+	    context.startService(syncIntent);
 	}
 
 }

@@ -100,7 +100,7 @@ public class SyncService extends Service {
 	/**
 	 * Server host name.
 	 */
-	private static String HOST = "10.200.0.240";
+	private static String HOST = "10.100.0.55";
 	/**
 	 * Relative path to the PHP script returning the latest data id on the server.
 	 */

@@ -36,7 +36,7 @@ public class SpinnerActivityTypeListener implements OnItemSelectedListener {
 			editor.commit();
 		}
 		Toast.makeText(parent.getContext(), 
-				"OnItemSelectedListener : " + parent.getItemAtPosition(pos).toString(),
+				"Activity Type : " + parent.getItemAtPosition(pos).toString(),
 				Toast.LENGTH_SHORT).show();
 		
 	}
