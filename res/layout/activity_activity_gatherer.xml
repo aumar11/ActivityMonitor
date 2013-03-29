@@ -8,28 +8,13 @@
 
         <Spinner
             android:id="@+id/spnrAcType"
-            android:layout_width="200dip"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:drawSelectorOnTop="true"
             android:entries="@array/type_arrays"
-            android:prompt="@string/type_prompt" />
+            android:prompt="@string/type_prompt"/>
     </TableRow>
 
-    <TableRow>
 
-        <Button
-            android:id="@+id/latestbutton"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:enabled="true"
-            android:onClick="latestButtonClick"
-            android:text="@string/latest" />
-
-        <TextView
-            android:id="@+id/txtLatestID"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </TableRow>
 
 </TableLayout>

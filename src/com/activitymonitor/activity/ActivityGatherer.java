@@ -92,18 +92,7 @@ public class ActivityGatherer extends Activity {
 	}
 
 
-	/**
-	 * Sets the view to display the id of the last record added
-	 * to a database
-	 * @param v
-	 */
-	public void latestButtonClick(View v){
-		TextView edtLabelName = (TextView) ActivityGatherer.this.findViewById(R.id.txtLatestID);
-		SampleDB db = new SampleDB(getApplicationContext());
-		String id = db.getLatestID();
-		edtLabelName.setText("id = " + id);
 
-	}
 
 
 }

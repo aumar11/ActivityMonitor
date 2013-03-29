@@ -134,24 +134,7 @@ public class SampleDB {
 		return path;
 	}
 
-	public String getLatestID(){
-		Log.i(TAG, "Fetching id of last record");
-		SQLiteDatabase db = null;
-		try {
-			db = dbHelper.getReadableDatabase();
-			String[] columns = new String[1];
-			columns[0] = SampleDBHelper.ID;
-			Cursor c = db.query(SampleDBHelper.SAMPLE_TABLE, columns, null,
-					null, null, null, SampleDBHelper.ID + " DESC LIMIT 1");
-			c.moveToFirst(); // data?
-			String id = c.getString(c.getColumnIndex("id"));
-			c.close();
-			return id;
-		} finally {
-			if (db != null)
-				db.close();
-		}
-	}
+
 
 
 	/**

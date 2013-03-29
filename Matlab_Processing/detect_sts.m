@@ -20,7 +20,7 @@ id = getfield(curs.Data,'id');
 
 %get all samples with the above activity_id
 query = 'SELECT * FROM sample WHERE activity_id = ';
-query = strcat(query,num2str(19));%NEED TO CHANGE BACK TO ACTUAL ID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+query = strcat(query,num2str(id));%NEED TO CHANGE BACK TO ACTUAL ID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 curs = exec(conn,query);
 setdbprefs('DataReturnFormat','structure');
 curs = fetch(curs);
@@ -48,24 +48,23 @@ zth = 4;
 
 %Set our starting state
 active =false;
-if((filterx(1)<xth && filtery(1)>yth)||(filterx(1)<xth&& filterz(i) >zth)...
-        || (filterz(1)>zth&& filtery >yth))
+if(filterz(1)>zth&& filtery(1) >yth)
     active = false;
-    strcat('Sedentary at ',timestamp(1))
+   strcat('Sedentary at ',timestamp(1))
 else
     active = true
-    strcat('Active at ',timestamp(1))
+   strcat('Active at ',timestamp(1))
     
 end
 
 for i=2:length(filterx),
     if(active)%If we are active check for when we are change to sedentary
-        if(filterx(i) < xth && filtery(i)> yth &&filterz(i)>zth)
+        if( filtery(i)> yth &&filterz(i)>zth)
             active = false;
             strcat('Sedentary at ',timestamp(i))
         end
     else %otherwise check for when we are becoming active
-        if(filterx(i) > xth && filtery(i)< yth &&filterz(i)<zth)
+        if(filtery(i)< yth &&filterz(i)<zth)
             active = true;
             strcat('Active at ',timestamp(i))
         end
@@ -85,7 +84,7 @@ xSize = X - xMargin;     %figure size on paper (widht & hieght)
 ySize = Y - yMargin;     %figure size on paper (widht & hieght)
 
 temp = strrep(activity_type(1), '-', '');
-filename = strcat(temp, num2str(19));
+filename = strcat(temp, num2str(id));
 filename = strcat(filename, '.pdf');
 fn = filename{1}; % Oh god wat?! Char array's 'n' shit.
 filterfilename = strcat('Filter', filename);
@@ -119,7 +118,7 @@ set(gcf, 'PaperOrientation','portrait');
 saveas(gcf, fn); %Save figure
 
 figure('Menubar','none','Position',[1 scrsz(4)/2 scrsz(3)/2 scrsz(4)/2]);
-plot(time,filterx,'x',time,filtery,'x',time,filterz,'x',time,-8,'-',...
+plot(time,filterx,'x',time,filtery,'x',time,filterz,'x',...
     time, 4,'-',time,-2,'-');
 
 set(gca,'XTick', time(1:20:end),'XTickLabel', timelabel,...
