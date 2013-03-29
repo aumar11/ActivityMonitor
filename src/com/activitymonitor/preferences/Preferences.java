@@ -34,13 +34,15 @@ public class Preferences {
   
   public static final String STAND_TO_SIT = "stand_to_sit";
   
+  public static final String TEST = "test";
+  
   public static final String STS = "s-t-s";
   
   public static final String SWS = "s-w-s";
   
   public static final String TYPE_ERROR = "ERROR";
   
-  public static final String CURRENT_TYPE = "sit_to_stand";
+  
   
   
   
@@ -54,6 +56,8 @@ public class Preferences {
    * (to be used in conjunction with {@link android.content.SharedPreferences}).
    */
   public static final String CURRENT_STATE = "CurrentState";
+  
+  public static final String CURRENT_TYPE = "sit_to_stand";
 
   private Preferences() {}
 }

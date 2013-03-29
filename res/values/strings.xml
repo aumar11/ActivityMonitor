@@ -15,10 +15,16 @@
         <item>Stand to Sit</item>
         <item>S-T-S</item>
         <item>S-W-S</item>
+        <item>Test</item>
     </string-array>
 
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_about">AboutActivity</string>
-
+    <string name="title_activity_about">About</string>
+    
+    <string name="author">Author: Adeeb Umar</string>
+    <string name="app_name2">Application name: ActivityMonitor</string>
+    <string name="version">Version: 2</string>
+    <string name="aboutinfo">Info: The ActivityMonitor app gathers and stores data from the built in accerlerometer.This data is then sent to a central server to under go singal processing. The data is used to detect when the user is in a sedentary or active state. This information correlates to how "active" the user has been. This version of the app is primarily used as a means to collect training data to analyse user movement. </string>
+	<string name="setup">Set up: Headphones are required with a headset hook button to start and stop gathering accelerometer data and synching with the server. Before running the app ensure that host ip is set up correctly in the settings menu. </string>
 </resources>

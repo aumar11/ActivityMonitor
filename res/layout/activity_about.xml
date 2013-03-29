@@ -9,8 +9,42 @@
     tools:context=".AboutActivity" >
 
     <TextView
+        android:id="@+id/lblappname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:text="@string/app_name2" 
+        android:layout_marginBottom = "5dp"/>
+
+    <TextView
+        android:id="@+id/lblauthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lblappname"
+        android:text="@string/author"
+        android:layout_marginBottom ="5dp" />
+
+    <TextView
+        android:id="@+id/lblversion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lblauthor"
+        android:text="@string/version"
+        android:layout_marginBottom ="5dp" />
+
+    <TextView
+        android:id="@+id/lblaboutinfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lblversion"
+        android:text="@string/aboutinfo"
+        android:layout_marginBottom ="5dp" />
+    
+        <TextView
+        android:id="@+id/lblsetup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lblaboutinfo"
+        android:text="@string/setup"
+        android:layout_marginBottom ="5dp" />
 
 </RelativeLayout>
