@@ -9,6 +9,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -91,7 +92,18 @@ public class ActivityGatherer extends Activity {
 		return true;
 	}
 
-
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.settings:
+       // startActivity(new Intent(this, About.class));
+        return true;
+        case R.id.about:
+      //  startActivity(new Intent(this, Help.class));
+        return true;
+        default:
+        return super.onOptionsItemSelected(item);
+        }
+    }
 
 
 
