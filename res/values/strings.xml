@@ -17,4 +17,8 @@
         <item>S-W-S</item>
     </string-array>
 
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_about">AboutActivity</string>
+
 </resources>

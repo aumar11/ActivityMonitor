@@ -45,13 +45,6 @@ public class ActivityGatherer extends Activity {
 		removeHeadSetListener();
 	}
 	
-	@Override
-	protected void onResume(){
-		super.onResume();
-		setUpHeadSetListener();
-	}
-	
-
 	private void setPreferences() {
 	    SharedPreferences settings = getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
 	      SharedPreferences.Editor editor = settings.edit();
@@ -95,10 +88,10 @@ public class ActivityGatherer extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.settings:
-       // startActivity(new Intent(this, About.class));
+        startActivity(new Intent(this, SettingsActivity.class));
         return true;
         case R.id.about:
-      //  startActivity(new Intent(this, Help.class));
+        startActivity(new Intent(this, AboutActivity.class));
         return true;
         default:
         return super.onOptionsItemSelected(item);
