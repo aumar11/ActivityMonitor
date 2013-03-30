@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,6 +8,55 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SettingsActivity" >
 
+    <TableRow android:layout_marginBottom="10dp" >
 
+        <TextView
+            android:id="@+id/lblhost"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="@string/host" />
 
-</RelativeLayout>
+        <EditText
+            android:id="@+id/edithost"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.75"
+            android:hint="@string/hosthint"
+            android:singleLine="true" >
+        </EditText>
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:id="@+id/lblport"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="@string/port" />
+
+        <EditText
+            android:id="@+id/editport"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.75"
+            android:hint="@string/porthint"
+            android:singleLine="true" >
+        </EditText>
+    </TableRow>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight=".5" >
+
+        <Button
+            android:id="@+id/btnserversetup"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/setupserver" />
+    </RelativeLayout>
+
+</TableLayout>
