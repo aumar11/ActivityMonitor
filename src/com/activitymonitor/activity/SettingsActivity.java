@@ -1,5 +1,9 @@
 package com.activitymonitor.activity;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -40,10 +44,11 @@ public class SettingsActivity extends Activity {
 			String p = port.getText().toString();
 			if(h.matches(patternhost) && p.matches(patternport)){
 				//set preferences and and go back to the main activity
+
 				SharedPreferences settings = view.getContext().getSharedPreferences(Preferences.PREFS_NAME, Context.MODE_PRIVATE);
 				SharedPreferences.Editor editor = settings.edit();
 				editor.putString(Preferences.HOST, h);
-				editor.putString(Preferences.PORT, p);
+				editor.putInt(Preferences.PORT, Integer.parseInt(p));
 				editor.commit();
 				Toast.makeText(view.getContext(), "Host: " + h +"\nPort: " + p,
 						Toast.LENGTH_SHORT).show();

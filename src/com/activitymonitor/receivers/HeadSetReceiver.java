@@ -1,11 +1,15 @@
 package com.activitymonitor.receivers;
 
+import com.activitymonitor.R;
+import com.activitymonitor.activity.ActivityGatherer;
 import com.activitymonitor.preferences.Preferences;
 import com.activitymonitor.services.ActivityGathererService;
 import com.activitymonitor.services.SyncService;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Ringtone;
@@ -94,6 +98,7 @@ public class HeadSetReceiver extends BroadcastReceiver {
 		Log.d(TAG,"Trying to start the main service");
 		Intent intent = new Intent(context, ActivityGathererService.class);
 		context.startService(intent);
+		
 	}
 
 	/**

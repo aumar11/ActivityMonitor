@@ -60,10 +60,12 @@ import com.activitymonitor.helpers.CancelableThread;
 import com.activitymonitor.helpers.FixedInputStreamBody;
 import com.activitymonitor.helpers.Gzipper;
 import com.activitymonitor.helpers.Stringer;
+import com.activitymonitor.preferences.Preferences;
 
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -100,7 +102,7 @@ public class SyncService extends Service {
 	/**
 	 * Server host name.
 	 */
-	private static String HOST = "10.100.0.55";
+	private String HOST;
 	/**
 	 * Relative path to the PHP script returning the latest data id on the server.
 	 */
@@ -117,7 +119,7 @@ public class SyncService extends Service {
 	/**
 	 * Network port param (443 for TLS).
 	 */
-	private final static int PORT = 80;
+	private int PORT;
 	/**
 	 * Consecutive pushing retry delay values.
 	 */
@@ -141,7 +143,13 @@ public class SyncService extends Service {
 		mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
 		mWakeLock.acquire();
-//		getIpAddr();
+		setUpServer();
+	}
+
+	private void setUpServer() {
+		SharedPreferences settings = getApplicationContext().getSharedPreferences(Preferences.PREFS_NAME, Context.MODE_PRIVATE);
+		HOST = settings.getString(Preferences.HOST, Preferences.TYPE_ERROR);
+		PORT = settings.getInt(Preferences.PORT, Preferences.STATE_ERROR);
 	}
 
 	/**
@@ -214,7 +222,7 @@ public class SyncService extends Service {
 
 
 
-			URI uri = URIUtils.createURI("http", SyncService.HOST, SyncService.PORT, DATA_SAMPLE_PATH, null, null);
+			URI uri = URIUtils.createURI("http", HOST, PORT, DATA_SAMPLE_PATH, null, null);
 			HttpPost httpPost = new HttpPost(uri);
 			httpPost.setEntity(multipartEntity);
 			DefaultHttpClient httpClient = new DefaultHttpClient(new BasicHttpParams());
@@ -285,7 +293,7 @@ public class SyncService extends Service {
 				DefaultHttpClient httpClient = new DefaultHttpClient(new BasicHttpParams());
 				HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), CONNECTION_TIMEOUT);        
 				try {
-					URI uri = URIUtils.createURI("http", SyncService.HOST, SyncService.PORT, LATEST_SAMPLE_PATH, null, null);
+					URI uri = URIUtils.createURI("http", HOST, PORT, LATEST_SAMPLE_PATH, null, null);
 					Log.i(SyncService.TAG, "URI: " + uri);
 					HttpGet httpGet = new HttpGet(uri);                        
 					HttpResponse httpResponse = httpClient.execute(httpGet);
