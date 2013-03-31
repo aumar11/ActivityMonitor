@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.75"
             android:hint="@string/hosthint"
-            android:singleLine="true" >
+            android:singleLine="true"
+            android:inputType="phone" >
         </EditText>
     </TableRow>
 
@@ -42,7 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.75"
             android:hint="@string/porthint"
-            android:singleLine="true" >
+            android:singleLine="true" 
+            android:inputType="number">
         </EditText>
     </TableRow>
 

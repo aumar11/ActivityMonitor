@@ -58,6 +58,10 @@ public class Preferences {
   public static final String CURRENT_STATE = "CurrentState";
   
   public static final String CURRENT_TYPE = "sit_to_stand";
+  
+  public static final String HOST = "Host";
+  
+  public static final String PORT = "Port";
 
   private Preferences() {}
 }
