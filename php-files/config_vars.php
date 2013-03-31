@@ -1,9 +1,14 @@
 <?php
   $sample = array(
-    '_id' => '_id',
+    'id' => 'id',
     'x' => 'x',
     'y' => 'y',
     'z' => 'z',
     'timestamp' => 'timestamp',
-    'labelName' => 'labelName',
+    'activity_type' => 'activity_type',
+	'activity_id' => 'activity_id',
+  );
+  $names = array(
+	'id' => 'id',
+	'activity_name' => 'activity_name',
   );

@@ -36,6 +36,7 @@ z = getfield(curs.Data,'z');
 timestamp = getfield(curs.Data,'timestamp');
 time = datenum( timestamp, 'yyyy-mm-dd HH:MM:SS.FFF');
 timelabel = datestr(time(1:20:end), 'HH:MM:SS.FFF');
+timexlabel = datestr(time(1),'dd-mm-yyyy HH:MM:SS.FFF');
 activity_type = getfield(curs.Data, 'activity_type');
 
 %Filter the acceleromter data using a moving average filter
@@ -46,31 +47,7 @@ xth = -5;
 yth = -5;
 zth = 4;
 
-%Set our starting state
-active =false;
-if(filterz(1)>zth&& filtery(1) >yth)
-    active = false;
-   strcat('Sedentary at ',timestamp(1))
-else
-    active = true
-   strcat('Active at ',timestamp(1))
-    
-end
 
-for i=2:length(filterx),
-    if(active)%If we are active check for when we are change to sedentary
-        if( filtery(i)> yth &&filterz(i)>zth)
-            active = false;
-            strcat('Sedentary at ',timestamp(i))
-        end
-    else %otherwise check for when we are becoming active
-        if(filtery(i)< yth &&filterz(i)<zth)
-            active = true;
-            strcat('Active at ',timestamp(i))
-        end
-        
-    end
-end
 
 
 %---------------------SET UP PLOT -----------------------------------------
@@ -106,20 +83,22 @@ hleg = legend('x axis','y axis','z axis',...
     'Location','NorthEastOutside');
 % Make the text of the legend italic and color it brown
 set(hleg,'FontAngle','italic','TextColor',[.3,.2,.1]);
-title('Three Axis Accelerometer Data against Time');
-xlabel('TimeStamp');
-ylabel('Acceleration ms^-2');
+%title('Three Axis Accelerometer Data against Time','FontSize',16);
+title('SWS (Raw Data)','FontSize',14);
+xlabel(sprintf('Timestamp starting %s', timexlabel),'FontSize',12);
+ylabel('Acceleration ms^-2','FontSize',12);
 
 %# figure size printed on paper
 set(gcf, 'PaperUnits','centimeters');
 set(gcf, 'PaperSize',[X Y]);
 set(gcf, 'PaperPosition',[xMargin yMargin xSize ySize]);
 set(gcf, 'PaperOrientation','portrait');
-saveas(gcf, fn); %Save figure
+saveas(gcf, 'SWSRaw.pdf'); %Save figure
 
-figure('Menubar','none','Position',[1 scrsz(4)/2 scrsz(3)/2 scrsz(4)/2]);
-plot(time,filterx,'x',time,filtery,'x',time,filterz,'x',...
-    time, 4,'-',time,-2,'-');
+
+plot(time,filterx,'x',time,filtery,'x',time,filterz,'x');
+%datetick('x','HH:MM:SS');
+
 
 set(gca,'XTick', time(1:20:end),'XTickLabel', timelabel,...
     'Units','normalized');
@@ -129,13 +108,14 @@ hleg = legend('x axis','y axis','z axis',...
     'Location','NorthEastOutside');
 % Make the text of the legend italic and color it brown
 set(hleg,'FontAngle','italic','TextColor',[.3,.2,.1]);
-title('Filtered Three Axis Accelerometer Data against Time');
-xlabel('TimeStamp');
-ylabel('Acceleration ms^-2');
+%title('Three Axis Accelerometer Data against Time','FontSize',16);
+title('SWS (Filter Data)','FontSize',14);
+xlabel(sprintf('Timestamp starting %s', timexlabel),'FontSize',12);
+ylabel('Acceleration ms^-2','FontSize',12);
 
 %# figure size printed on paper
 set(gcf, 'PaperUnits','centimeters');
 set(gcf, 'PaperSize',[X Y]);
 set(gcf, 'PaperPosition',[xMargin yMargin xSize ySize]);
 set(gcf, 'PaperOrientation','portrait');
-saveas(gcf,ffn ); %Save figure
+saveas(gcf, 'SWSFiltered.pdf'); %Save figure
