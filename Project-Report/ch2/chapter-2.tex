@@ -1,0 +1,110 @@
+\chapter{Another Chapter} % (fold)
+\label{cha:another_chapter}
+
+\section{Latex Basics} % (fold)
+\label{sec:latex_basics}
+
+\subsection{Text} % (fold)
+\label{sub:text}
+
+Text is set in the roman face by default. It can be \textit{italic} or \textbf{bold}.
+
+New paragraphs are indicated by a new line. Latex will handle paragraph spacing and indentation according to the rules in the preamble.
+
+Quotation marks are open with a backtick (\`{}) and closed with a quote (\'{}): `This a quote'. Double quotation marks use two of each: ``Another quote''. (Punctuation marks which are not part of the quote should be outside of the quotation marks.)
+
+Itemised lists can be created:
+
+\begin{itemize}
+  \item a thing,
+  \item a thing,
+  \item something else.
+\end{itemize}
+
+As can enumerated lists:
+
+\begin{enumerate}
+  \item a thing,
+  \item another thing,
+  \item something else.
+\end{enumerate}
+% subsection text (end)
+
+\subsection{Figures} % (fold)
+\label{sub:figures}
+
+An example Figure is shown in Figure~\ref{fig:Figures_amazing_grace}.
+
+\begin{figure}[h]
+  \includegraphics[width=\textwidth]{figures/amazing-grace.pdf}
+  \caption{Rear Admiral `Amazing' Grace Murry Hopper.}
+  \label{fig:Figures_amazing_grace}
+\end{figure}
+% subsection figures (end)
+
+\subsection{Tables} % (fold)
+\label{sub:tables}
+
+Table~\ref{tab:an_example_table} shows an example of a table. It uses the mdwtab package (see the preamble) for prettier tables.
+
+\begin{table}[h]
+  \caption{An Example Table.}
+  \small % Change size if required
+  \begin{tabular*}{\textwidth}[L]{@{\extracolsep{\fill}}c c c c c c}
+  \hlx{vhv}
+  \multicolumn{1}{c}{Column 1} &
+  \multicolumn{1}{c}{Column 2} &
+  \multicolumn{1}{c}{Column 3} &
+  \multicolumn{1}{c}{Column 4} &
+  \multicolumn{1}{c}{Column 5} &
+  \multicolumn{1}{c}{Column 6} \\ \hlx{vhv}
+  Numbers & 0 & 1 & 2 & 3 & 42 \\
+  Data & 9.63 & 170.0 & 0.0034 & 96 & 7,239 \\
+  Woo! & ~ & 0 & 0 & 0 & $x$ \\ \hlx{vhs}
+  \label{tab:an_example_table}
+  \end{tabular*}
+\end{table}
+% subsection tables (end)
+
+\subsection{References} % (fold)
+\label{sub:references}
+
+References are extremely important. Use a numbered scheme in technical documents. Some examples: if you ever need a good reference book describing the lower-level operation of the TeX engine see Eijkhout~\cite{Eijkhout1991tex}, Strunk and White~\cite{Strunk2004style} is an excellent grammar reference for technical writers due to their insistence on a terse style, and Tufte~\cite{Tufte2001visual} is the best reference for presenting data in graphs and charts.
+% subsection references (end)
+% section latex_basics (end)
+
+\section{Further LaTeX} % (fold)
+\label{sec:further_latex}
+
+You may also find these features useful when writing reports.
+
+\subsection{Block Quotes} % (fold)
+\label{sub:block_quotes}
+
+Block quotes are useful when reporting on background work and performing literature review. The look like this:
+\begin{quote}
+  \blindtext
+\end{quote}
+Note that I have renewed the quote command to reduce the size of the text and set the quoted text ragged-right. See the preamble for details.
+
+% subsection block_quotes (end)
+
+\subsection{Code Listings} % (fold)
+\label{sub:code_listings}
+
+Code listings are properly set using the Listings package. It will typeset code in many programming languages and there are numerous customisations available such as showing line numbers and syntax highlighting options, see the package documentation for details. An example is shown in Listing~\ref{lis:hello_world}. Note that the code is set in the mono-spaced font defined in the preamble and that the keywords are set in bold. This is because the programming language (C in this case) is defined on the fly using the \lstinline{\lstset} command before the start of the listing environment (BTW, use the \lstinline{\lstinline} command for in-line code snippets).
+
+\lstset{language=C}
+\begin{lstlisting}[caption={Hello, World! in C.}, label={lis:hello_world}]
+/* Hello World program */
+#include<stdio.h>
+
+int main(void)
+{
+    printf("Hello World");
+    return(0);
+}
+\end{lstlisting}
+% subsection code_listings (end)
+% section further_latex (end)
+% chapter another_chapter (end)

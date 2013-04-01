@@ -1,0 +1,25 @@
+\documentclass[12pt, a4paper, oneside, parskip=full, english]{scrbook}
+
+\input{preamble}
+
+\begin{document}
+
+\pagenumbering{roman}
+\input{front-matter/title}
+\input{front-matter/abstract}
+\input{front-matter/contents}
+\cleardoublepage
+\pagenumbering{arabic}
+
+\input{ch1/chapter-1}
+\input{ch2/chapter-2}
+
+\setcounter{enumiv}{0}
+\bibliographystyle{unsrturl}
+\addcontentsline{toc}{chapter}{\bibname}
+\bibliography{references}
+
+\appendix
+\include{appendices/appendix}
+ 
+\end{document}
