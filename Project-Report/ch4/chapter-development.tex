@@ -28,17 +28,44 @@ To keep track of the current spinner item selected the SpinnerActivityTypeListen
 \paragraph{}
 Initial versions of the gui contained a button widget which was used to start and stop the collection of accelerometer data. However, as this data was being used to represent purely the state of the user  assuming the phone was in their pocket an on screen button implies the phone beings out with the users pocket. This then adds noise to both the start and the end of the signal, which at this stage of the application was vital to remove. 
 \paragraph{}
+This first solution adopted was to introduce a count down timer when the button is first pressed to recored data. This gave the user enough time to place the smartphone into their pocket before the data started recording. However, this solution only eliminated the noise from the beginning of the signal as the user still had to remove the phone out of their pocket to stop recording. The second solution again used count down timers. THe first count down timer was used in a similar fashion to the first solution. The second timer was used to automatically stop the recording after a specified amount of time. This solved the problem of noise before and after the required signal. The disadvantage of this method was that it was not clear how long of a window was required for each type of activity. The final solution took advantage of the button found on the standard Galaxy Nexus headset. 
 
+\subsection{HeadSetReceiver} % (fold)
+\label{sub:subsection_headset}
+When the main activity is created a HeadSetReceiver is registered. This class implements a BroadcastReciever which listens for a specific type of intent, ACTION MEDIA BUTTON. When the media button is clicked the onReceive() method is invoked. THis method is crucial to creating both the services used to gather accelerometer data and to sync the data with the central server. The headsetreceiver is unregistered once the application is stopped.
 
-\subsection{Another Subsection} % (fold)
-\label{sub:another_subsection}
+\subsection{Main Service} % (fold)
+\label{sub:main_service}
+The ActivityGathererService when created registers the key listeners/receiver. These are the AccelerometerListener and SyncAlarmReceiver. When the app is not on screen the activity goes onPause() however the service remains to run in the background, this is vital to ensure the app is still gathering data whilst the user can still the smartphone.
 
-\paragraph{Paragraph Name} % (fold)
-\label{par:paragraph_name}
+\subsection{Gathering Data} % (fold)
+\label{sub:data_gathering}
+The first stage of the app is to collect the embedded accelerometer output from the phone. The method to do this on Android is by implement SensorEventListener class as well as registering it ot a SensorManager. 
+\paragraph{}
+The SensorManager is used to access the sensors on the smartphone. The registerListener method is used to register a SensorEventListener to listen for events from a specific sensors at a specified rate. The accelerometer is the sensor required for this project. A rate of 10Hz was used.The documentation of the sensormanger~\cite{android2013manager} states
+\begin{quote}
+The rate sensor events are delivered at. This is only a hint to the system. Events may be received faster or slower than the specified rate. Usually events are received faster.
+\end{quote}
+This will be discussed in more detail in later chapters.
+\paragraph{}
+The AccelerometerListener was created to listen for sensor events. Implemented this class requires the onAccuracyChanged() and more importantly the onSensorChanged() to be over ridden. As discussed previously SensorManager specifies a rate at which sensor events should occur, onSensorChanged() is the method called when the sensor events are received. THe information we are interested in when listing for accelerometer output is Event.value. It is a float array that contains x, y and z axis accelerometer data in value[0], value[1] and value[2] respectively. 
 
-\paragraph{Another Paragraph} % (fold)
-\label{par:another_paragraph}
-
+\subsection{DataBase} % (fold)
+\label{sub:data_gathering}
+This app is used to gather training data to be analyzed. It is therefore essential that this data is stored securely and in a manner that it could be searched through efficiently. The appropriate android solution to this is to create and maintain an SQLite3 database. There are three main classes used in this to create and maintain this database. These are the SampleDBHelper, SampleDb and Sample. 
+\subsubsection{SampleDBHelper} % (fold)
+\label{ssub:db_helper}
+SampleDBHelper implements SQLiteOpenHelper and is specifically used to create and upgrade the database. It is also used to store key database information such as the name of the database, version, table names and table column names. 
+\paragraph{}
+In the app there are two tables, sample and activity. NEED TO INPUT DATABASE SCHEME.
+\paragraph{}
+Activity is used to create a unique id and name for each new activity recording. This id is used to query sample to get all accelerometer samples for that unique recording. Type in sample is used to collectively query for all types of activities etc.
+\subsubsection{SampleDB} % (fold)
+\label{ssub:db}
+SampleDB is used to add to and query the database with the help of SampleDBHelper. The three main methods in this class are addSample(), getLatestSampleID() and getlatestActivityID(). AddSAmple is used on the smartphone side to add a new accelerometer sample to the SQlite3 database. The other two methods are used in conjunction with the SyncService class.
+\subsubsection{Sample} % (fold)
+\label{ssub:sample}
+The Sample class was created as a helper class. An instance of this class is used to store a given accelerometer reading with some additional information The accelerometer data is received from Event.value. So a samples stores x, y and z axis accelerometer data. It also stores a timestamp of when the reading was created as well as the label type i.e sit to stand, stand to sit etc. A new sample is created and stored in the SQLite3 database when onSensorChangeEvent is called. db.addnewSample(...).
 \section{Another Section} % (fold)
 \label{sec:another_section}
 
