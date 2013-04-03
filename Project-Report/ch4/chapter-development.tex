@@ -1,0 +1,44 @@
+\chapter{Development} % (fold)
+\label{cha:chapter_development}
+
+The design of this system can be split into three significant stages. These are the Android application gathering data,the central server for storing the data and matlab for processing the data. 
+
+\section{Android Application} % (fold)
+\label{sec:section_app}
+
+\subsection{Overview of the functionality} % (fold)
+\label{sub:subsection_appoverview}
+As mentioned in the introduction, the main aim of the app is to detect when the user is in an active of sedentary state soley by the data gathered by the embedded accelerometer. Currently the app developed is a prototype which allows user to effectively record and store training accelerometer data which will be used in its ultimate goal.
+
+\subsection{Main Activity} % (fold)
+\label{sub:subsection_mainactivity}
+The ``ActivityGatherer'' class is the activity which is launched when the application is first run. A activity simply ``represents a single screen with a user interface''~\cite{android2013fundamentals}. The current version of the app requires a simple GUI as its main purpose is to gather training data. Figure~\ref{fig:main-activity} shows the the starting activity.
+\begin{figure}[h]
+  \includegraphics[width=\textwidth]{figures/screenshots/main.png}
+  \caption{Main Activity.}
+  \label{fig:main-activity}
+\end{figure}
+As can be seen in the above figure the main activity contains a spinner widget. The spinner widget is androids equivalent of a drop down menu. The menu choices given by the spinner allows the user to select a label for what type of activity is going to be recorded. 
+\begin{figure}[h]
+  \includegraphics[width=\textwidth]{figures/screenshots/types.png}
+  \caption{Activity Label Type Options.}
+  \label{fig:type-choice}
+\end{figure}
+To keep track of the current spinner item selected the SpinnerActivityTypeListener class was created. This class implements the OnItemSelectedListener and over rides the OnItemSelected() method. In this method the current Preferences of the app are altered according to the label name selected. Preferences is a helper class which is used to store the current state of the app can be accessed globally with in the context of the application.
+\paragraph{}
+Initial versions of the gui contained a button widget which was used to start and stop the collection of accelerometer data. However, as this data was being used to represent purely the state of the user  assuming the phone was in their pocket an on screen button implies the phone beings out with the users pocket. This then adds noise to both the start and the end of the signal, which at this stage of the application was vital to remove. 
+\paragraph{}
+
+
+\subsection{Another Subsection} % (fold)
+\label{sub:another_subsection}
+
+\paragraph{Paragraph Name} % (fold)
+\label{par:paragraph_name}
+
+\paragraph{Another Paragraph} % (fold)
+\label{par:another_paragraph}
+
+\section{Another Section} % (fold)
+\label{sec:another_section}
+
