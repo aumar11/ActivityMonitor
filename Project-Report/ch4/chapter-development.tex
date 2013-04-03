@@ -66,6 +66,24 @@ SampleDB is used to add to and query the database with the help of SampleDBHelpe
 \subsubsection{Sample} % (fold)
 \label{ssub:sample}
 The Sample class was created as a helper class. An instance of this class is used to store a given accelerometer reading with some additional information The accelerometer data is received from Event.value. So a samples stores x, y and z axis accelerometer data. It also stores a timestamp of when the reading was created as well as the label type i.e sit to stand, stand to sit etc. A new sample is created and stored in the SQLite3 database when onSensorChangeEvent is called. db.addnewSample(...).
-\section{Another Section} % (fold)
-\label{sec:another_section}
 
+\subsection{Syncing with Central Server} % (fold)
+\label{sub:synching}
+It is vital for the app to send the data that has been collected and stored in the SqLite3 database. The classes dedicated to this task are the SyncAlarmReceiver and SyncService.
+\subsubsection{SyncAlarmReceiver} % (fold)
+\label{ssub:alarm}
+SyncAlarmReceiver implements BroadcastReceiver. An Alarm can be set to go off at a specific time trigger, which is received by the on Receive method off broadcastReciver. THis method ensure that the server is continuously updated at regular time intervals.
+\paragraph{}
+SynchService is the most vital class in this process. When the SyncService is created a new Thread is created. This ensures that data is still gathered by the AccelelerometerListener and put into the on phone database whilst the sync is in progress concurrently parallelism. In the new thread run()is invoked and these are the several key steps. 
+\paragraph{}
+FIrst establish connection with the server and request for the id of the latest record on the activity and sample table on the MySQL database. Get the all the records that still have to be synced and create a CSV file and GZIP up, and update the server with this new information. The id's of the latest ensure that only the relevant data to be sent is sent. zipping the file compresses the data to be sent, therefore reducing the time taken to send file to the server and free up phone resources. 
+
+\section{Central Server} % (fold)
+\label{sec:section_server}
+Xampp is an easy to install apache distribution that contains apache, MYSQL, PHP, and Perl amongst other tools. The apache webserver is used to communicate over HTTP with he android. RESTFUL interface thing.
+MySQl database was created with the same database schema names included as the SQlite3 database on the android phone using phpmyadmin. Helper PHP scripts were used to query the SQL database to find the latest id of the records stored to work with SyncService described previously via get post. Another php script was used to collect the zipped file sent by the phone and unzip and extract its contents. Once the data is extracted a query is used to insert the contents of the file appropriately in to the MySQL database.
+
+\section{Matlab} % (fold)
+\label{sec:section_matlab}
+Matlab was used to analyze the data that has been gathered. It was chosen over other data analyze tools mainly due to the ease at which it connected with the Xampp server and MySQL database but without compromising with the level of analysis that could be achieved. One of the main advantage of Matlab is that scripts can be produced. This means once code has been appropriately created and tested it can stored in a script. Then instead of having to write all the code, the name of the script can be entered and all the work is automated. 
+ 
