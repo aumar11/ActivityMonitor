@@ -1,0 +1,13 @@
+\chapter{Related Research} % (fold)
+\label{cha:chapter_rr}
+\section{Analysis of Accelerometer Data Background}
+\label{sec:accanalback}
+
+There has been a large interest in activity recognition and is becoming a popular research area. In particular data gathered by accelerometers on users has shown promising results~\cite{bao2004annotated}~\cite{ravi2005recognition}~\cite{randell2000awerness}. In terms of machine learning, activity recognition is formulated as a classification problem~\cite{ravi2005recognition}. Many researchers have used ``windows, window sizes and overlapping windows of the data''\cite{ravi2005recognition} to categorise activities. However, in their article Hristijan Gjoreski et al. demonstrate that this approach is not a viable option when determining whether the user is a sedentary state, 
+\begin{quote}
+With this approach, every instance cannot be classified, but a group of instances (one window) are classified together. The disadvantage of this approach is that short activities like going down and standing up cannot be recognized.
+\end{quote}
+They go on to state that for the scenario that every activity is to be classified that the key features used in the classification are
+\begin{quote}
+Some of the attributes are the traditional features that are used for acceleration activity recognition like: mean, standard deviation, root mean square, etc., but there are also some features that measure the direction and the movement of the person.
+\end{quote}
