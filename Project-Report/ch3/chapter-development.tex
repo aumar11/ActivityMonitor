@@ -1,20 +1,27 @@
 \chapter{Development} % (fold)
 \label{cha:chapter_development}
 
-The design of this system can be split into three significant stages. These are the Android application gathering data,the central server for storing the data and matlab for processing the data. 
+The design of this system can be split into three significant stages. These are the Android application gathering data,the central server for storing the data and Matlab for processing the data. 
 
 \section{Android Application} % (fold)
 \label{sec:section_app}
 
 \subsection{Overview of the functionality} % (fold)
 \label{sub:subsection_appoverview}
-As mentioned in the introduction, the main aim of the app is to detect when the user is in an active of sedentary state soley by the data gathered by the embedded accelerometer. Currently the app developed is a prototype which allows user to effectively record and store training accelerometer data which will be used in its ultimate goal.
+As mentioned in the introduction, the main aim of the app is to detect when the user is in an active of sedentary state solely by the data gathered by the embedded accelerometer. Currently the app developed is a prototype which allows user to effectively record and store training accelerometer data which will be used in its ultimate goal.
 
+\subsection{Android Fundamentals} % (fold)
+\label{sub:android_fundamentals}
+\begin{itemize}
+  \item Activity: `An activity represents a single screen with a user interface'
+  \item Service: `A service is a component that runs in the background to perform long-running operations or to perform work for remote processes.'
+  \item BroadCastReceiver: `A broadcast receiver is a component that responds to system-wide broadcast announcements'.
+\end{itemize}
 \subsection{Main Activity} % (fold)
 \label{sub:subsection_mainactivity}
 The ``ActivityGatherer'' class is the activity which is launched when the application is first run. A activity simply ``represents a single screen with a user interface''~\cite{android2013fundamentals}. The current version of the app requires a simple GUI as its main purpose is to gather training data. Figure~\ref{fig:main-activity} shows the the starting activity.
 \begin{figure}[h]
-  \includegraphics[width=\textwidth]{figures/screenshots/main.png}
+  \includegraphics[width=\textwidth]{figures/screenshots/main.pdf}
   \caption{Main Activity.}
   \label{fig:main-activity}
 \end{figure}
